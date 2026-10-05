@@ -1,0 +1,659 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>U Freelance - Portal</title>
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, Helvetica, sans-serif;
+        }
+
+        body {
+            background-color: #ffffff;
+            color: #000000;
+            line-height: 1.6;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .page-view {
+            display: none;
+            width: 100%;
+            min-height: 100vh;
+        }
+
+        .page-view.active {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .auth-container {
+            max-width: 420px;
+            width: 90%;
+            margin: auto;
+            padding: 30px;
+            border: 1px solid #e0e0e0;
+            border-radius: 12px;
+            background-color: #ffffff;
+            margin-top: 60px;
+            margin-bottom: 60px;
+        }
+
+        .auth-logo {
+            font-size: 24px;
+            font-weight: bold;
+            text-align: center;
+            margin-bottom: 8px;
+        }
+
+        .auth-sub {
+            font-size: 13px;
+            color: #666666;
+            text-align: center;
+            margin-bottom: 25px;
+        }
+
+        .auth-toggle {
+            display: flex;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            padding: 4px;
+            margin-bottom: 25px;
+            background-color: #f9f9f9;
+        }
+
+        .toggle-btn {
+            flex: 1;
+            padding: 8px;
+            border: none;
+            background: none;
+            font-size: 13px;
+            font-weight: bold;
+            cursor: pointer;
+            border-radius: 6px;
+            color: #666666;
+        }
+
+        .toggle-btn.active {
+            background-color: #ffffff;
+            color: #000000;
+            border: 1px solid #e0e0e0;
+        }
+
+        .form-group {
+            margin-bottom: 18px;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 12px;
+            font-weight: bold;
+            margin-bottom: 6px;
+        }
+
+        .form-group input, .form-group select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #cccccc;
+            border-radius: 6px;
+            font-size: 13px;
+            outline: none;
+        }
+
+        .form-group input:focus, .form-group select:focus {
+            border-color: #000000;
+        }
+
+        .auth-submit-btn {
+            width: 100%;
+            padding: 11px;
+            background-color: #000000;
+            color: #ffffff;
+            border: none;
+            border-radius: 6px;
+            font-size: 13px;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+
+        .auth-submit-btn:hover {
+            background-color: #333333;
+        }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 40px;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .logo {
+            font-size: 20px;
+            font-weight: bold;
+            letter-spacing: -0.5px;
+        }
+
+        nav {
+            display: flex;
+            background-color: #f4f4f4;
+            padding: 4px;
+            border-radius: 20px;
+            border: 1px solid #e0e0e0;
+        }
+
+        .nav-btn {
+            background: none;
+            border: none;
+            padding: 6px 16px;
+            font-size: 13px;
+            font-weight: 500;
+            cursor: pointer;
+            border-radius: 15px;
+            color: #555555;
+        }
+
+        .nav-btn.active {
+            background-color: #ffffff;
+            color: #000000;
+            font-weight: bold;
+            box-shadow: 0px 1px 3px rgba(0,0,0,0.1);
+        }
+
+        .user-actions {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .user-profile {
+            background: none;
+            border: 1px solid #000000;
+            padding: 6px 18px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        .logout-btn {
+            background: none;
+            border: none;
+            font-size: 12px;
+            color: #666666;
+            cursor: pointer;
+            text-decoration: underline;
+        }
+
+        main {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 30px 20px;
+            width: 100%;
+            flex-grow: 1;
+        }
+
+        .hero-section {
+            display: flex;
+            gap: 20px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+        }
+
+        .hero-box {
+            flex: 2;
+            min-width: 300px;
+            border: 1px solid #e0e0e0;
+            border-radius: 12px;
+            padding: 35px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .tagline {
+            font-size: 11px;
+            font-weight: bold;
+            letter-spacing: 1px;
+            color: #666666;
+            margin-bottom: 10px;
+        }
+
+        .hero-box h1 {
+            font-size: 32px;
+            font-weight: 800;
+            margin-bottom: 12px;
+        }
+
+        .hero-box p {
+            color: #555555;
+            font-size: 14px;
+            margin-bottom: 25px;
+        }
+
+        .primary-btn {
+            background: none;
+            border: 2px solid #000000;
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-size: 13px;
+            font-weight: bold;
+            cursor: pointer;
+            width: fit-content;
+        }
+
+        .primary-btn:hover {
+            background-color: #000000;
+            color: #ffffff;
+        }
+
+        /* Top Recommendation Box */
+        .recommendation-box {
+            flex: 1;
+            min-width: 250px;
+            border: 1px solid #e0e0e0;
+            border-radius: 12px;
+            padding: 30px;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .loading-circle {
+            width: 45px;
+            height: 45px;
+            border: 3px solid #f0f0f0;
+            border-top: 3px solid #000000;
+            border-radius: 50%;
+            margin-bottom: 15px;
+        }
+
+        .recommendation-box h3 {
+            font-size: 14px;
+            margin-bottom: 4px;
+        }
+
+        .recommendation-box .status {
+            font-size: 16px;
+            font-weight: bold;
+            margin-bottom: 2px;
+        }
+
+        .recommendation-box .subtext {
+            font-size: 12px;
+            color: #666666;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 15px;
+            margin-bottom: 40px;
+        }
+
+        .stat-card {
+            border: 1px solid #e0e0e0;
+            border-radius: 12px;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 28px;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .stat-label {
+            font-size: 12px;
+            color: #666666;
+        }
+
+        .section-title {
+            font-size: 20px;
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
+
+        .candidates-list {
+            margin-bottom: 40px;
+            border: 1px solid #e0e0e0;
+            border-radius: 12px;
+            overflow: hidden;
+        }
+
+        .candidate-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 20px;
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        .candidate-row:last-child {
+            border-bottom: none;
+        }
+
+        .candidate-info {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .candidate-name {
+            font-size: 14px;
+            font-weight: bold;
+        }
+
+        .candidate-details {
+            font-size: 12px;
+            color: #666666;
+        }
+
+        .candidate-score {
+            font-size: 14px;
+            font-weight: bold;
+            border: 1px solid #000000;
+            padding: 4px 12px;
+            border-radius: 6px;
+        }
+
+        .workflow-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+        }
+
+        .step-card {
+            border: 1px solid #e0e0e0;
+            border-radius: 12px;
+            padding: 20px;
+        }
+
+        .step-number {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .step-title {
+            font-size: 14px;
+            font-weight: bold;
+            margin-bottom: 6px;
+        }
+
+        .step-desc {
+            font-size: 12px;
+            color: #666666;
+        }
+
+        footer {
+            text-align: center;
+            padding: 20px;
+            border-top: 1px solid #e0e0e0;
+            font-size: 12px;
+            color: #666666;
+        }
+    </style>
+</head>
+<body>
+
+    <div id="auth-page" class="page-view active">
+        <div class="auth-container">
+            <div class="auth-logo">U Freelance</div>
+            <div class="auth-sub">Automated Candidate Selection System</div>
+
+            <!-- Login / Register Tab Switcher -->
+            <div class="auth-toggle">
+                <button id="toggle-login" class="toggle-btn active" onclick="switchAuthTab('login')">Login</button>
+                <button id="toggle-register" class="toggle-btn" onclick="switchAuthTab('register')">Register</button>
+            </div>
+
+            <!-- Login Form -->
+            <form id="login-form" onsubmit="handleLogin(event)">
+                <div class="form-group">
+                    <label for="login-email">Email Address</label>
+                    <input type="email" id="login-email" placeholder="angha.singh@example.com" required>
+                </div>
+                <div class="form-group">
+                    <label for="login-password">Password</label>
+                    <input type="password" id="login-password" placeholder="••••••••" required>
+                </div>
+                <button type="submit" class="auth-submit-btn">Login</button>
+            </form>
+
+            <!-- Registration Form (Hidden by default) -->
+            <form id="register-form" style="display: none;" onsubmit="handleRegister(event)">
+                <div class="form-group">
+                    <label for="reg-name">Full Name</label>
+                    <input type="text" id="reg-name" value="Angha Singh" placeholder="Angha Singh" required>
+                </div>
+                <div class="form-group">
+                    <label for="reg-email">Email Address</label>
+                    <input type="email" id="reg-email" placeholder="angha.singh@example.com" required>
+                </div>
+                <div class="form-group">
+                    <label for="reg-password">Password</label>
+                    <input type="password" id="reg-password" placeholder="••••••••" required>
+                </div>
+                <div class="form-group">
+                    <label for="reg-role">Account Type</label>
+                    <select id="reg-role">
+                        <option value="Client">Client</option>
+                        <option value="Freelancer">Freelancer</option>
+                    </select>
+                </div>
+                <button type="submit" class="auth-submit-btn">Register Account</button>
+            </form>
+        </div>
+    </div>
+
+    <div id="dashboard-page" class="page-view">
+        <!-- Header -->
+        <header>
+            <div class="logo">U Freelance</div>
+            
+            <nav>
+                <button class="nav-btn active" onclick="selectTab(this)">Dashboard</button>
+                <button class="nav-btn" onclick="selectTab(this)">Post Task</button>
+                <button class="nav-btn" onclick="selectTab(this)">Compare Bids</button>
+                <button class="nav-btn" onclick="selectTab(this)">Leaderboard</button>
+            </nav>
+
+            <div class="user-actions">
+                <div class="user-profile" id="user-display-name">Angha Singh</div>
+                <button class="logout-btn" onclick="handleLogout()">Logout</button>
+            </div>
+        </header>
+
+        <main>
+            <!-- Hero Banner -->
+            <div class="hero-section">
+                <div class="hero-box">
+                    <div>
+                        <div class="tagline">AUTOMATED MULTI-CRITERIA SELECTION</div>
+                        <h1>Find the right freelancer faster.</h1>
+                        <p>Post a task, receive bids, and let U Freelance rank candidates using price, delivery time and rating.</p>
+                    </div>
+                    <button class="primary-btn" onclick="addNewTask()">Create a Task</button>
+                </div>
+
+                <div class="recommendation-box">
+                    <div class="loading-circle"></div>
+                    <h3>Top recommendation</h3>
+                    <div class="status" id="rec-status">Angha Singh</div>
+                    <div class="subtext">Score: 98.5% (Highest)</div>
+                </div>
+            </div>
+
+            <!-- Stats Overview -->
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-number" id="active-tasks-count">0</div>
+                    <div class="stat-label">Active tasks</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="total-bids-count">0</div>
+                    <div class="stat-label">Total bids</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">0.0</div>
+                    <div class="stat-label">Avg. rating</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">1.2d</div>
+                    <div class="stat-label">Avg. response</div>
+                </div>
+            </div>
+
+            <!-- Candidate Leaderboard -->
+            <div class="section-title">Top Ranked Candidates</div>
+            <div class="candidates-list">
+                <div class="candidate-row">
+                    <div class="candidate-info">
+                        <span class="candidate-name">Angha Singh</span>
+                        <span class="candidate-details">Bid: ₹1,500 | Delivery: 1 Day | Rating: 4.9 ★</span>
+                    </div>
+                    <div class="candidate-score">98.5%</div>
+                </div>
+
+                <div class="candidate-row">
+                    <div class="candidate-info">
+                        <span class="candidate-name">Aarav Sharma</span>
+                        <span class="candidate-details">Bid: ₹1,800 | Delivery: 2 Days | Rating: 4.8 ★</span>
+                    </div>
+                    <div class="candidate-score">91.2%</div>
+                </div>
+
+                <div class="candidate-row">
+                    <div class="candidate-info">
+                        <span class="candidate-name">Priya Patel</span>
+                        <span class="candidate-details">Bid: ₹2,000 | Delivery: 1 Day | Rating: 4.7 ★</span>
+                    </div>
+                    <div class="candidate-score">87.4%</div>
+                </div>
+
+                <div class="candidate-row">
+                    <div class="candidate-info">
+                        <span class="candidate-name">Rohan Verma</span>
+                        <span class="candidate-details">Bid: ₹2,200 | Delivery: 3 Days | Rating: 4.5 ★</span>
+                    </div>
+                    <div class="candidate-score">81.0%</div>
+                </div>
+            </div>
+
+            <!-- How It Works Section -->
+            <div class="workflow-section">
+                <div class="section-title">How it works</div>
+                
+                <div class="workflow-grid">
+                    <div class="step-card">
+                        <div class="step-number">01</div>
+                        <div class="step-title">Post a task</div>
+                        <div class="step-desc">Set requirements, budget and deadline.</div>
+                    </div>
+
+                    <div class="step-card">
+                        <div class="step-number">02</div>
+                        <div class="step-title">Collect bids</div>
+                        <div class="step-desc">Freelancers submit price and delivery time.</div>
+                    </div>
+
+                    <div class="step-card">
+                        <div class="step-number">03</div>
+                        <div class="step-title">Smart ranking</div>
+                        <div class="step-desc">The scoring engine compares every bid.</div>
+                    </div>
+
+                    <div class="step-card">
+                        <div class="step-number">04</div>
+                        <div class="step-title">Choose confidently</div>
+                        <div class="step-desc">See the highest-scoring recommendation.</div>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <footer>
+            U Freelance · Automated Multi-Criteria Freelancer Selection System
+        </footer>
+    </div>
+
+    <script>
+        // Track task stats
+        let activeTasks = 0;
+        let totalBids = 0;
+
+        // Function to switch between Login and Register forms
+        function switchAuthTab(type) {
+            let loginForm = document.getElementById('login-form');
+            let registerForm = document.getElementById('register-form');
+            let toggleLogin = document.getElementById('toggle-login');
+            let toggleRegister = document.getElementById('toggle-register');
+
+            if (type === 'login') {
+                loginForm.style.display = 'block';
+                registerForm.style.display = 'none';
+                toggleLogin.classList.add('active');
+                toggleRegister.classList.remove('active');
+            } else {
+                loginForm.style.display = 'none';
+                registerForm.style.display = 'block';
+                toggleRegister.classList.add('active');
+                toggleLogin.classList.remove('active');
+            }
+        }
+
+        // Function to handle Login submit
+        function handleLogin(event) {
+            event.preventDefault();
+            // Default user name
+            openDashboard("Angha Singh");
+        }
+
+        // Function to handle Registration submit
+        function handleRegister(event) {
+            event.preventDefault();
+            let nameInput = document.getElementById('reg-name').value;
+            let userName = nameInput.trim() !== "" ? nameInput : "Angha Singh";
+            openDashboard(userName);
+        }
+
+        // Function to switch view from Auth page to Dashboard page
+        function openDashboard(userName) {
+            document.getElementById('user-display-name').innerText = userName;
+            document.getElementById('auth-page').classList.remove('active');
+            document.getElementById('dashboard-page').classList.add('active');
+        }
+
+        // Function to handle Logout back to Auth page
+        function handleLogout() {
+            document.getElementById('dashboard-page').classList.remove('active');
+            document.getElementById('auth-page').classList.add('active');
+        }
+
+        // Function to select active tab in header
+        function selectTab(button) {
+            let buttons = document.querySelectorAll('.nav-btn');
+            buttons.forEach(btn => btn.classList.remove('active'));
+            button.classList.add('active');
+        }
+
+        // Function to simulate creating a task
+        function addNewTask() {
+            activeTasks += 1;
+            totalBids += 2;
+
+            document.getElementById('active-tasks-count').innerText = activeTasks;
+            document.getElementById('total-bids-count').innerText = totalBids;
+        }
+    </script>
+</body>
+</html>
